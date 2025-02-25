@@ -1,3 +1,6 @@
+#ifndef LOG_PARSER_H
+#define LOG_PARSER_H
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -34,3 +37,4 @@ unordered_map<string, int> successful_accesses_by_uri_;
 
 
 };
+#endif // LOG_PARSER_H

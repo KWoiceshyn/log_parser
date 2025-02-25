@@ -20,12 +20,25 @@ void LogParser::LoadLogFile(const string& log_file_path, const string& start_tim
         string status;
         string bytes;
         iss >> host >> date_time >> request >> uri >> proto >> status >> bytes;
+        if(host.empty()){
+            cerr << "Invalid host name." << endl;
+            continue;
+        }
+        // Remove quotes from request
+        size_t pos = -1;
+        while ((pos = request.rfind('\"')) != string::npos) {
+            request.erase(pos, 1);
+        }
         //cout << host << " " << date_time << " " << request << " " << uri << " " << proto << " " << status << " " << bytes << endl;
         if (false) {
             //TODO check time range
         } else {
             webserver_accesses_per_host_[host]++;
-            if (request == "\"GET" and status == code_OK) {
+            if (request == "GET" and status == code_OK) {
+                if(uri.empty()){
+                    cerr << "Invalid URI." << endl;
+                    continue;
+                }
                 successful_accesses_by_uri_[uri]++;
             }
         }
