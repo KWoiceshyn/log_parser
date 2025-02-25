@@ -57,17 +57,11 @@ vector<pair<string, int>>  LogParser::sortByCount(const unordered_map<string, in
     return data_sorted;
 }
 
-void LogParser::getWebserverAccessesByHost() {
-    auto data = sortByCount(webserver_accesses_per_host_);
-    // TODO write output to file ?
-    for (const auto& [name, count] : data) {
-        cout << name << " " << count << endl;
-    }
+vector<pair<string, int>>  LogParser::getWebserverAccessesByHost() {
+    return sortByCount(webserver_accesses_per_host_);
+
 }
 
-void LogParser::getSuccessfulAccessesByURI() {
-    auto data = sortByCount(successful_accesses_by_uri_);
-    for (const auto& [name, count] : data) {
-        cout << name << " " << count << endl;
-    }
+vector<pair<string, int>> LogParser::getSuccessfulAccessesByURI() {
+    return sortByCount(successful_accesses_by_uri_);
 }

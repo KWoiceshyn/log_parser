@@ -20,9 +20,9 @@ LogParser();
 
 void LoadLogFile(const string& log_file_path, const string& start_time="", const string& end_time="");
 
-void getWebserverAccessesByHost();
+vector<pair<string, int>> getWebserverAccessesByHost();
 
-void getSuccessfulAccessesByURI();
+vector<pair<string, int>> getSuccessfulAccessesByURI();
 
 
 private:

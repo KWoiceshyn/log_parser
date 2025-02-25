@@ -10,10 +10,19 @@ int main(int argc, char** argv){
 
     LogParser log_parser;
     log_parser.LoadLogFile(string(argv[2]));
+    auto webserver_accesses = log_parser.getWebserverAccessesByHost();
+    auto uri_accesses = log_parser.getSuccessfulAccessesByURI();
+
+    // TODO write output to file ?
+    for (const auto& [name, count] : webserver_accesses) {
+        cout << name << " " << count << endl;
+    }
     cout << endl;
-    log_parser.getWebserverAccessesByHost();
-    cout << endl;
-    log_parser.getSuccessfulAccessesByURI();
+    
+    for (const auto& [name, count] : uri_accesses) {
+        cout << name << " " << count << endl;
+    }
+    
 
     return 0;
 }

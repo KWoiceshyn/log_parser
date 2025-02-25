@@ -1,0 +1,5 @@
+host1 [00:00:00:00] "GET /uri1 HTTP/1.0" 302 -
+host2 [00:00:01:00] "POST /uri2 HTTP/1.0" 200 0
+host1 [00:00:02:00] "GET /uri3 HTTP/1.0" 200 0
+host3 [00:00:03:00] "GET /uri3 HTTP/1.0" 200 0
+host4 [00:00:04:00] "GET /uri3 HTTP/1.0" 200 0
