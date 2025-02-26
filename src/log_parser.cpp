@@ -3,7 +3,7 @@
 LogParser::LogParser() : log_file_path_(""), code_OK_("200"), target_request_("GET") {
 }
 
-void LogParser::LoadLogFile(const string& log_file_path, const string& start_time, const string& end_time) {
+void LogParser::LoadLogFile(const string& log_file_path) {
     log_file_path_ = log_file_path;
     webserver_accesses_per_host_.clear();
     successful_accesses_by_uri_.clear();
@@ -28,6 +28,27 @@ void LogParser::processLine(const string& line) {
         cerr << "Invalid host name." << endl;
         return;
     }
+
+    if(start_time_){
+        tm tm = {};
+        stringstream ss(date_time);
+        ss >> get_time(&tm, date_log_format_);
+        chrono::system_clock::time_point line_time = chrono::system_clock::from_time_t(mktime(&tm));
+        if(line_time < *start_time_){
+            return;
+        }
+    }
+
+    if(end_time_){
+        tm tm = {};
+        stringstream ss(date_time);
+        ss >> get_time(&tm, date_log_format_);
+        chrono::system_clock::time_point line_time = chrono::system_clock::from_time_t(mktime(&tm));
+        if(line_time > *end_time_){
+            return;
+        }
+    }
+
     // Remove quotes from request
     size_t pos = -1;
     while ((pos = request.rfind('\"')) != string::npos) {
@@ -46,6 +67,28 @@ void LogParser::processLine(const string& line) {
             successful_accesses_by_uri_[uri]++;
         }
     }
+}
+
+void LogParser::setStartTime(const string& start_time) {
+    if(!regex_match(start_time, regex(date_input_rgx_))){
+        cerr << "Invalid start time." << endl;
+        return;
+    }
+    tm tm = {};
+    stringstream ss(start_time);
+    ss >> get_time(&tm, date_input_format_);
+    start_time_ = make_unique<chrono::system_clock::time_point>(chrono::system_clock::from_time_t(mktime(&tm)));
+}
+
+void LogParser::setEndTime(const string& end_time) {
+    if(!regex_match(end_time, regex(date_input_rgx_))){
+        cerr << "Invalid end time." << endl;
+        return;
+    }
+    tm tm = {};
+    stringstream ss(end_time);
+    ss >> get_time(&tm, date_input_format_);
+    end_time_ = make_unique<chrono::system_clock::time_point>(chrono::system_clock::from_time_t(mktime(&tm)));
 }
 
 vector<pair<string, int>>  LogParser::sortByCount(const unordered_map<string, int>& data) {
