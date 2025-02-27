@@ -12,7 +12,7 @@ protected:
 TEST_F(LogParserTests, shouldContainCorrectNumberOfWebserverCount) {
     auto webserver_accesses = log_parser.getWebserverAccessesByHost();
     string host1 = "host1";
-    int host1_count = 2;
+    int host1_count = 3;
     EXPECT_EQ(webserver_accesses[0].first, host1);
     EXPECT_EQ(webserver_accesses[0].second, host1_count);
 }
@@ -20,7 +20,7 @@ TEST_F(LogParserTests, shouldContainCorrectNumberOfWebserverCount) {
 TEST_F(LogParserTests, shouldContainCorrectNumberOfURICount){
     auto uri_accesses = log_parser.getSuccessfulAccessesByURI();
     string uri1 = "/uri3";
-    int uri1_count = 3;
+    int uri1_count = 4;
     EXPECT_EQ(uri_accesses[0].first, uri1);
     EXPECT_EQ(uri_accesses[0].second, uri1_count);
 }
@@ -39,6 +39,20 @@ TEST_F(LogParserTests, shouldNotContainUnsuccessful){
     for (const auto& [name, count] : uri_accesses) {
         EXPECT_NE(name, uri1);
     }
+}
+
+TEST_F(LogParserTests, timeRangeShouldLimitResults)
+{
+    string start_time = "01:00:01:00";
+    string end_time = "01:00:03:00";
+    log_parser.setStartTime(start_time);
+    log_parser.setEndTime(end_time);
+    log_parser.LoadLogFile("../test/test_log.txt");
+    auto uri_accesses = log_parser.getSuccessfulAccessesByURI();
+    string uri1 = "/uri3";
+    int uri1_count = 2;
+    EXPECT_EQ(uri_accesses[0].first, uri1);
+    EXPECT_EQ(uri_accesses[0].second, uri1_count);
 }
 
 int main(int argc, char **argv) {
