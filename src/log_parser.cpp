@@ -29,6 +29,7 @@ void LogParser::processLine(const string& line) {
         return;
     }
 
+    // Check if time is in range
     if(start_time_){
         tm tm = {};
         stringstream ss(date_time);
@@ -54,10 +55,8 @@ void LogParser::processLine(const string& line) {
     while ((pos = request.rfind('\"')) != string::npos) {
         request.erase(pos, 1);
     }
-    //cout << host << " " << date_time << " " << request << " " << uri << " " << proto << " " << status << " " << bytes << endl;
-    if (false) {
-        //TODO check time range
-    } else {
+
+    // Add values to counts
         webserver_accesses_per_host_[host]++;
         if (request == target_request_ and status == code_OK_) {
             if(uri.empty()){
@@ -66,7 +65,6 @@ void LogParser::processLine(const string& line) {
             }
             successful_accesses_by_uri_[uri]++;
         }
-    }
 }
 
 void LogParser::setStartTime(const string& start_time) {
